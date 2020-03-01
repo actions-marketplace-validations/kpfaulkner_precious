@@ -65,8 +65,6 @@ func sendToSlack(endpoint string, msg models.Webhook) error {
 
 func main() {
 	eventPath := os.Getenv("GITHUB_EVENT_PATH")
-  fmt.Printf("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx\n")
-
 	dat, err := ioutil.ReadFile(eventPath)
 	if err != nil {
     fmt.Printf("unable to read event")
