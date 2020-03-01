@@ -37,11 +37,12 @@ func main() {
 	}
 
 	pageTitles := os.Getenv("WIKI_TITLES_TO_ALERT")
+	githubActor := os.Getenv("GITHUB_ACTOR")
 	titleList := strings.Split(strings.ToLower(pageTitles), ",")
 
 	for _,page := range ev.Pages {
 		if contains(titleList, strings.ToLower(page.Title)) {
-			fmt.Printf("page title: %s , pagename: %s, star: %d\n", page.Title, page.PageName, ev.Repository.StargazersCount)
+			fmt.Printf("page title: %s , pagename: %s, change by: %s\n", page.Title, page.PageName, githubActor )
 		}
   }
 	//fmt.Println(fmt.Sprintf(`::set-output name=myOutput::%s`, output))
