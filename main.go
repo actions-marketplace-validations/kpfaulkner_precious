@@ -1,10 +1,12 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"github.com/kpfaulkner/precious/models"
 	"io/ioutil"
+	"net/http"
 	"os"
 	"strings"
 )
@@ -16,6 +18,49 @@ func contains(titleList []string, title string) bool {
 		}
 	}
 	return false
+}
+
+func sendSlackMessage( title string, author string) error {
+
+	fields := []models.Field{
+		{
+			Title: "Wiki Changed",
+			Value: title,
+			Short: false,
+		},
+	}
+
+	msg := models.Webhook{
+		UserName: "precious",
+		Attachments: []models.Attachment{
+			{
+				AuthorName: author,
+				Fields:     fields,
+			},
+		},
+	}
+
+	endpoint := os.Getenv("SLACK_WEBHOOK")
+	if endpoint == "" {
+		fmt.Fprintln(os.Stderr, "URL is required")
+		os.Exit(1)
+	}
+
+	err := sendToSlack(endpoint, msg)
+	return err
+}
+
+func sendToSlack(endpoint string, msg models.Webhook) error {
+	enc, err := json.Marshal(msg)
+	if err != nil {
+		return err
+	}
+	b := bytes.NewBuffer(enc)
+	_, err = http.Post(endpoint, "application/json", b)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func main() {
