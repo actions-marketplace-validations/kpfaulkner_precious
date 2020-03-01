@@ -2,6 +2,9 @@ name: 'Precious Slack'
 description: 'Will (eventually) send updates to slack based on github wiki pages being updated'
 author: 'kpfaulkner'
 on: gollum
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
 jobs:
   build:
     name: BuildRun
@@ -16,6 +19,9 @@ jobs:
       - uses: actions/checkout@v1
 
       - name: BuildRun
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          WIKI_TITLES_TO_ALERT : "home"
         run: |
           go get -d -v
           go run -v .
