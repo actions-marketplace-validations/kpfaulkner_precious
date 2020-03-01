@@ -1,0 +1,22 @@
+name: precious
+on: gollum
+jobs:
+  build:
+    name: BuildRun
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go 1.13
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.13
+        id: go
+
+      - uses: actions/checkout@v1
+
+      - name: BuildRun
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          WIKI_TITLES_TO_ALERT : "home"
+        run: |
+          go get -d -v
+          go run -v .
