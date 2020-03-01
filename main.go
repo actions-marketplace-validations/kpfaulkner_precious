@@ -87,6 +87,7 @@ func main() {
 
 	for _,page := range ev.Pages {
 		if contains(titleList, strings.ToLower(page.Title)) {
+			sendSlackMessage(page.Title, githubActor)
 			fmt.Printf("page title: %s , pagename: %s, change by: %s\n", page.Title, page.PageName, githubActor )
 		}
   }
