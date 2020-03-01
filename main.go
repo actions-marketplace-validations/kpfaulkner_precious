@@ -6,7 +6,17 @@ import (
 	"github.com/kpfaulkner/precious/models"
 	"io/ioutil"
 	"os"
+	"strings"
 )
+
+func contains(titleList []string, title string) bool {
+	for _, t := range titleList {
+		if t == title {
+			return true
+		}
+	}
+	return false
+}
 
 func main() {
 	eventPath := os.Getenv("GITHUB_EVENT_PATH")
@@ -26,9 +36,13 @@ func main() {
 		return
 	}
 
-  for _,page := range ev.Pages {
-  	fmt.Printf("page title: %s , pagename: %s, star: %d\n", page.Title, page.PageName, ev.Repository.StargazersCount)
-  }
+	pageTitles := os.Getenv("WIKI_TITLES_TO_ALERT")
+	titleList := strings.Split(strings.ToLower(pageTitles), ",")
 
+	for _,page := range ev.Pages {
+		if contains(titleList, strings.ToLower(page.Title)) {
+			fmt.Printf("page title: %s , pagename: %s, star: %d\n", page.Title, page.PageName, ev.Repository.StargazersCount)
+		}
+  }
 	//fmt.Println(fmt.Sprintf(`::set-output name=myOutput::%s`, output))
 }
