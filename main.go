@@ -20,7 +20,7 @@ func contains(titleList []string, title string) bool {
 	return false
 }
 
-func sendSlackMessage( title string, author string) error {
+func generateSlackMessage( title string, author string) (models.Webhook, error) {
 
 	fields := []models.Field{
 		{
@@ -40,17 +40,23 @@ func sendSlackMessage( title string, author string) error {
 		},
 	}
 
+	return msg, nil
+}
+
+func sendToSlack(title string, author string) error {
+
+	msg, err := generateSlackMessage(title, author)
+	if err != nil {
+		fmt.Printf("error generating slack message %s\n", err.Error())
+		return err
+	}
+
 	endpoint := os.Getenv("SLACK_WEBHOOK")
 	if endpoint == "" {
 		fmt.Fprintln(os.Stderr, "URL is required")
 		os.Exit(1)
 	}
 
-	err := sendToSlack(endpoint, msg)
-	return err
-}
-
-func sendToSlack(endpoint string, msg models.Webhook) error {
 	enc, err := json.Marshal(msg)
 	if err != nil {
 		return err
@@ -85,9 +91,7 @@ func main() {
 
 	for _,page := range ev.Pages {
 		if contains(titleList, strings.ToLower(page.Title)) {
-			sendSlackMessage(page.Title, githubActor)
-			fmt.Printf("page title: %s , pagename: %s, change by: %s\n", page.Title, page.PageName, githubActor )
+			sendToSlack(page.Title, githubActor)
 		}
   }
-	//fmt.Println(fmt.Sprintf(`::set-output name=myOutput::%s`, output))
 }
