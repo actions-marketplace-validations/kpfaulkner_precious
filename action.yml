@@ -1,5 +1,5 @@
 name: 'Precious Slack'
-description: 'Will (eventually) send updates to slack based on github wiki pages being updated'
+description: 'Will send updates to slack based on github wiki pages being updated'
 author: 'kpfaulkner'
 on: gollum
 runs:

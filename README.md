@@ -23,5 +23,6 @@ jobs:
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 
 secrets.SLACK_WEBHOOK is a regular Slack webhook ( https://slack.com/help/articles/115005265063-Incoming-Webhooks-for-Slack )
+
 WIKI_TITLES_TO_ALERT is a comma separated list of wiki titles that you want to alert on. If you happen to have a comma in your title, then 
 I might need to change things.
